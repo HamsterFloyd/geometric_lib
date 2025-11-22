@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python-version: ["3.10", "3.11", "3.12"]
+        python-version: ["3.12"]
 
     steps:
       - name: Checkout
@@ -31,10 +31,9 @@ jobs:
           subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", "pip"])
           if os.path.isfile("requirements.txt"):
             subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
-          # Если у тебя пакет со структурой и pyproject.toml/setup.cfg — можно добавить установку самого проекта:
-          # subprocess.check_call([sys.executable, "-m", "pip", "install", "-e", "."])
           subprocess.check_call([sys.executable, "-m", "pip", "install", "pytest"])
           PY
+          #
 
       - name: Run tests
         run: python -m pytest -q

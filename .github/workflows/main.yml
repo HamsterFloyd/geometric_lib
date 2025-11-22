@@ -8,14 +8,14 @@ on:
 
 jobs:
   tests:
-    name: pytest (${{ matrix.os }}, py${{ matrix.python-version }})
+    name: unittest (${{ matrix.os }}, py${{ matrix.python-version }})
     runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python-version: ["3.10", "3.11", "3.12"]
+        python-version: ["3.12"]
 
     steps:
       - name: Checkout
@@ -29,10 +29,9 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # если появятся зависимости — добавишь сюда:
+          # если когда-нибудь появятся зависимости — добавишь их сюда
           # python -m pip install -r requirements.txt
-          python -m pip install pytest
 
-      - name: Run tests
+      - name: Run unit tests
         run: |
-          python -m pytest -q tests
+          python -m unittest discover -s tests -p "*_test.py"

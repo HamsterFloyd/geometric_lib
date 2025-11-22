@@ -2,18 +2,20 @@ name: CI
 
 on:
   push:
-    branches: ["**"]
+    branches: ["main"]
   pull_request:
+    branches: ["main"]
 
 jobs:
   tests:
     name: pytest (${{ matrix.os }}, py${{ matrix.python-version }})
     runs-on: ${{ matrix.os }}
+
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python-version: ["3.12"]
+        python-version: ["3.10", "3.11", "3.12"]
 
     steps:
       - name: Checkout
@@ -26,14 +28,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python - <<'PY'
-          import os, subprocess, sys
-          subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", "pip"])
-          if os.path.isfile("requirements.txt"):
-            subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
-          subprocess.check_call([sys.executable, "-m", "pip", "install", "pytest"])
-          PY
-          #
+          python -m pip install --upgrade pip
+          # если появятся зависимости — добавишь сюда:
+          # python -m pip install -r requirements.txt
+          python -m pip install pytest
 
       - name: Run tests
-        run: python -m pytest -q
+        run: |
+          python -m pytest -q tests
